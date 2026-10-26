@@ -144,10 +144,327 @@ a {
     font-size: 0.95rem;
   }
 }
+
+/* 1位・2位の特別カード */
+.top-picks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 18px 0 28px;
+}
+
+.featured-card {
+  min-width: 0;
+  overflow: hidden;
+  background: #221e2d;
+  border: 1px solid #8f79b8;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px #00000035;
+}
+
+.featured-card:first-child {
+  border-color: #c9b6ff;
+  box-shadow: 0 0 0 1px #c9b6ff35,
+              0 8px 24px #00000035;
+}
+
+.featured-photo {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #302341;
+}
+
+.featured-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-meta {
+  padding: 16px;
+}
+
+.featured-rank {
+  color: #c9b6ff;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.featured-name {
+  color: #f7f3ff;
+  font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+  font-weight: 800;
+  margin: 8px 0 14px;
+  overflow-wrap: anywhere;
+}
+
+.profile-button {
+  width: 100%;
+  border: 1px solid #8f79b8;
+  border-radius: 12px;
+  padding: 12px;
+  background: #352744;
+  color: #f7f3ff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-button:hover {
+  background: #49365f;
+}
+
+.profile-panel {
+  padding: 14px;
+  border-top: 1px solid #594774;
+  color: #e5dcf4;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.profile-panel[hidden] {
+  display: none;
+}
+
+.profile-panel h3 {
+  color: #e0d2ff;
+  font-size: 1rem;
+  margin: 14px 0 4px;
+}
+
+.profile-panel p {
+  color: #c2b4d8;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.profile-panel a {
+  color: #d7c5ff;
+  text-decoration: underline;
+}
+
+.profile-row {
+  margin: 10px 0;
+}
+
+.profile-label {
+  display: block;
+  color: #c9b6ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.profile-value {
+  color: #f7f3ff;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 520px) {
+  .top-picks {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .featured-photo {
+    aspect-ratio: 4 / 3;
+  }
+}
 </style>
 </head><body><header><h1>💗 かいとの推しランキング</h1><p>TOP30 · 写真をタップすると掲載元へ</p></header>
-<main><input class="search" id="search" placeholder="名前で検索" aria-label="名前で検索"><div class="grid" id="grid"></div>
+<main><input class="search" id="search" placeholder="名前で検索" aria-label="名前で検索"><section class="top-picks" id="topPicks"></section>
+<div class="grid" id="grid"></div>
 <div class="note"><b>写真を設定するには</b><br>現在、人物ごとの掲載元リンクを登録したスターター版です。画像URLは未設定です。本人と確認できる公式写真や利用許諾された画像の直接URLを、下のコード内の各人物の <code>photo</code> に入力すると写真が表示されます。公開写真でも著作権は掲載元などにあるため、無断転載せず、掲載元の利用条件を守ってください。</div></main>
 <script>const people = [{"rank": 1, "name": "鈴木愛理", "photo": "https://crea.ismcdn.jp/mwimgs/2/a/767wm/img_2a839c032b2515c35fcfa17abfcc32103064638.jpg", "link": "https://www.airisuzuki-officialweb.com/"}, {"rank": 2, "name": "小松未可子", "photo": "https://hirata-office.jp/talent_profile/img/mikako_komatsu.jpg", "link": "https://hirata-office.jp/talent_profile/woman/mikako_komatsu.html"}, {"rank": 3, "name": "寺田蘭世", "photo": "https://www.nogizaka46.com/files/46/_pre/news/assets_c/2021/08/newsranze_2108261-thumb-400xauto-17081.jpg", "link": "https://note.com/honeyrosiehouse"}, {"rank": 4, "name": "川津明日香", "photo": "https://irving.co.jp/talents/wp-content/uploads/sites/3/2023/07/asuka_kawazu_800px002.jpg", "link": "https://irving.co.jp/talents/asuka-kawazu/"}, {"rank": 5, "name": "志田音々", "photo": "https://storage.googleapis.com/image.fanicon.net/uploads/hero_1700888472593_dkgrlthrx1.jpg", "link": "https://www.firstagent.jp/shida-nene/"}, {"rank": 6, "name": "黒嵜菜々子", "photo": "https://platinumproduction.jp/wp-content/uploads/2023/08/%E9%BB%92%E5%B5%9C%E8%8F%9C%E3%80%85%E5%AD%90%E5%AE%A3%E6%9D%90%E5%86%99%E7%9C%9F-scaled.jpg", "link": "https://platinumproduction.jp/talent/kurosakinanako/"}, {"rank": 7, "name": "齋藤飛鳥", "photo": "https://asukasaito.jp/images/36/ba7/d03fbe1fc56456535c97b7d9cc51e/2000_2000_102400.jpg", "link": "https://asukasaito.jp/s/m15/?ima=0051"}, {"rank": 8, "name": "佐倉綾音", "photo": "https://www.aoni.co.jp/search/items/sakura-ayane.jpeg", "link": "https://www.aoni.co.jp/search/sakura-ayane.html"}, {"rank": 9, "name": "鶴田りお（璃音）", "photo": "https://tokushima.ismcdn.jp/mwimgs/6/4/-/img_6487c1c202b40c585a8fc68787b3010098117.jpg", "link": "https://uniiique.jp/talent/%E9%B6%B4%E7%94%B0-%E3%82%8A%E3%81%8A/"}, {"rank": 10, "name": "稲光亜依", "photo": "https://laughface.co.jp/wordpress/wp-content/uploads/2026/02/ai.jpg", "link": "https://laughface.co.jp/talent/ai-inamitsu/"}, {"rank": 11, "name": "北岡果林", "photo": "", "link": "https://video.dmm.co.jp/av/list/?key=%E5%8C%97%E5%B2%A1%E6%9E%9C%E6%9E%97%20%E5%8D%98%E4%BD%93"}, {"rank": 12, "name": "涼井菜生", "photo": "https://www.at-production.jp/wp-content/uploads/2025/08/suzuinao01_202508.jpg", "link": "https://www.at-production.jp/talent/suzui-nao/"}, {"rank": 13, "name": "白石麻衣", "photo": "https://maishiraishi-official.com/images/14/bbe/afc9af28e300ab2c1e8409e41f198.png", "link": "https://maishiraishi-official.com/s/ms/?ima=3409"}, {"rank": 14, "name": "菜那セシル", "photo": "https://pearl-tokyo.jp/images/profile/1674190675/profile_picture.jpg?1792993004", "link": "https://pearl-tokyo.jp/talent.php?id=f7177163c833dff4b38fc8d2872f1ec6"}, {"rank": 15, "name": "冴木柚葉", "photo": "https://seju.tokyo/wp-content/uploads/2025/02/yuzuhas_02.jpg", "link": "https://seju.tokyo/talents/yuzuha-saeki/"}, {"rank": 16, "name": "谷口愛季", "photo": "https://sakurazaka46.com/images/14/9bb/57eda06681d1196b670e9f9776014/1000_1000_102400.jpg", "link": "https://sakurazaka46.com/s/s46/artist/63?ima=0000&link=ROBO004"}, {"rank": 17, "name": "佐々木ほのか", "photo": "https://yum-e.jp/wp-content/uploads/2025/08/1755829292.jpg", "link": "https://yum-e.jp/artists/%e4%bd%90%e3%80%85%e6%9c%a8%e3%81%bb%e3%81%ae%e3%81%8b/"}, {"rank": 18, "name": "生田絵梨花", "photo": "https://erikaikuta.jp/files/36/m12/assets/images/favicon_v2/apple-touch-icon.png", "link": "https://erikaikuta.jp/s/m12/?ima=4151"}, {"rank": 19, "name": "小森香乃", "photo": "https://contents.oricon.co.jp/upimg/news/2466000/2465092/20260702_105419_p_o_71261361.jpg", "link": "https://2touch.co.jp/komorikano/"}, {"rank": 20, "name": "石井優希", "photo": "https://prcdn.freetls.fastly.net/release_image/7006/15244/7006-15244-d0c00a31af469b7ed39b238bcc648881-920x1300.png?format=jpeg&auto=webp&quality=85%2C65&width=1950&height=1350&fit=bounds", "link": "https://lit.link/8f0805f9-64f4-42e6-9b18-29425059ca0c"}, {"rank": 21, "name": "松本麗世", "photo": "https://www.rising-pro.jp/artist/reiyo/images/profile.jpg", "link": "https://matsumotoreiyo.com/"}, {"rank": 22, "name": "出口夏希", "photo": "https://incent.jp/incent/talent/deguchi/16.jpg", "link": "https://incent.jp/incent/talent/deguchi/"}, {"rank": 23, "name": "森脇梨々夏", "photo": "https://platinumproduction.jp/wp-content/uploads/2023/08/%E6%A3%AE%E8%84%87%E6%A2%A8%E3%80%85%E5%A4%8F%E5%AE%A3%E6%9D%90-scaled.jpg", "link": "https://platinumproduction.jp/talent/moriwakiririka/"}, {"rank": 24, "name": "大原優乃", "photo": "https://fam-fansite.imgix.net/shared_file/463/c727ec76-1407-4053-af0b-6afce4f3b703.jpg?auto=format&s=6418f743a71273562620c9eb7b29cc71", "link": "https://ohara-yuno.com/profile"}, {"rank": 25, "name": "一ノ瀬瑠菜", "photo": "https://fam-fansite.imgix.net/shared_file/13612/0e36a84e-a9ca-4589-ac45-8f98bbabe2c2.png?auto=format&q=90&s=8415413d12d321b1f5635ca4f2e25f05", "link": "https://luna-ichinose.com/"}, {"rank": 26, "name": "松島かのん", "photo": "", "link": "https://www.google.com/search?tbm=isch&q=松島かのん+公式+プロフィール"}, {"rank": 27, "name": "井上和", "photo": "", "link": "https://www.google.com/search?tbm=isch&q=井上和+乃木坂46+公式+プロフィール"}, {"rank": 28, "name": "冨里奈央", "photo": "", "link": "https://www.nogizaka46.com/s/n46/diary/MEMBER/list?ima=0000&cd=MEMBER"}, {"rank": 29, "name": "山本杏", "photo": "", "link": "https://www.google.com/search?tbm=isch&q=山本杏+ヤングマガジン+公式+写真"}, {"rank": 30, "name": "松川星", "photo": "", "link": "https://www.google.com/search?tbm=isch&q=松川星+公式+プロフィール"}];
-function draw(q=''){const grid=document.getElementById('grid');grid.innerHTML='';people.filter(p=>p.name.includes(q)).forEach(p=>{const c=document.createElement('div');c.className='card';const a=document.createElement('a');a.href=p.link;a.target='_blank';a.rel='noopener';const ph=document.createElement('div');ph.className='photo';if(p.photo){const im=document.createElement('img');im.src=p.photo;im.alt=p.name;ph.appendChild(im)}else{ph.textContent='写真URLを設定すると\\nここに表示';}const m=document.createElement('div');m.className='meta';const r=document.createElement('div');r.className='rank';r.textContent='NO. '+p.rank;const n=document.createElement('div');n.className='name';n.textContent=p.name;m.append(r,n);a.append(ph,m);c.appendChild(a);grid.appendChild(c)})}
-document.getElementById('search').addEventListener('input',e=>draw(e.target.value));draw();</script></body></html>
+
+/* 1位・2位のプロフィール情報
+   未確認の項目は空欄のままにしておく */
+const profileDetails = {
+  1: {
+    intro: "",
+    birthday: "",
+    birthplace: "",
+    history: "",
+    works: "",
+    sns: ""
+  },
+  2: {
+    intro: "",
+    birthday: "",
+    birthplace: "",
+    history: "",
+    works: "",
+    sns: ""
+  }
+};
+
+function addProfileRow(parent, label, value) {
+  const row = document.createElement("div");
+  row.className = "profile-row";
+
+  const title = document.createElement("span");
+  title.className = "profile-label";
+  title.textContent = label;
+
+  const content = document.createElement("div");
+  content.className = "profile-value";
+  content.textContent = value || "未登録";
+
+  row.append(title, content);
+  parent.appendChild(row);
+}
+
+function makePhoto(person, className) {
+  const photo = document.createElement("div");
+  photo.className = className;
+
+  if (person.photo) {
+    const image = document.createElement("img");
+    image.src = person.photo;
+    image.alt = person.name;
+    image.loading = "lazy";
+    photo.appendChild(image);
+  } else {
+    photo.textContent = "写真URLを設定するとここに表示";
+  }
+
+  return photo;
+}
+
+function makeFeaturedCard(person) {
+  const card = document.createElement("article");
+  card.className = "featured-card";
+
+  card.appendChild(makePhoto(person, "featured-photo"));
+
+  const meta = document.createElement("div");
+  meta.className = "featured-meta";
+
+  const rank = document.createElement("div");
+  rank.className = "featured-rank";
+  rank.textContent = person.rank === 1 ? "👑 RANK 1" : "RANK 2";
+
+  const name = document.createElement("div");
+  name.className = "featured-name";
+  name.textContent = person.name;
+
+  const button = document.createElement("button");
+  button.className = "profile-button";
+  button.type = "button";
+  button.textContent = "プロフィールを見る ＋";
+
+  const panel = document.createElement("section");
+  panel.className = "profile-panel";
+  panel.hidden = true;
+
+  const details = profileDetails[person.rank] || {};
+
+  const heading = document.createElement("h3");
+  heading.textContent = "プロフィール";
+  panel.appendChild(heading);
+
+  addProfileRow(panel, "紹介文", details.intro);
+  addProfileRow(panel, "生年月日", details.birthday);
+  addProfileRow(panel, "出身地", details.birthplace);
+  addProfileRow(panel, "活動歴", details.history);
+  addProfileRow(panel, "代表作", details.works);
+  addProfileRow(panel, "公式SNS", details.sns);
+
+  const officialTitle = document.createElement("h3");
+  officialTitle.textContent = "公式サイト・掲載元";
+
+  const officialLink = document.createElement("a");
+  officialLink.href = person.link;
+  officialLink.target = "_blank";
+  officialLink.rel = "noopener noreferrer";
+  officialLink.textContent = "公式サイト・掲載元を開く ↗";
+
+  panel.append(officialTitle, officialLink);
+
+  button.addEventListener("click", () => {
+    panel.hidden = !panel.hidden;
+    button.textContent = panel.hidden
+      ? "プロフィールを見る ＋"
+      : "プロフィールを閉じる −";
+  });
+
+  meta.append(rank, name, button);
+  card.append(meta, panel);
+
+  return card;
+}
+
+function makeRegularCard(person) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const link = document.createElement("a");
+  link.href = person.link;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+
+  link.appendChild(makePhoto(person, "photo"));
+
+  const meta = document.createElement("div");
+  meta.className = "meta";
+
+  const rank = document.createElement("div");
+  rank.className = "rank";
+  rank.textContent = "NO. " + person.rank;
+
+  const name = document.createElement("div");
+  name.className = "name";
+  name.textContent = person.name;
+
+  meta.append(rank, name);
+  link.appendChild(meta);
+  card.appendChild(link);
+
+  return card;
+}
+
+function draw(q = "") {
+  const grid = document.getElementById("grid");
+  const topPicks = document.getElementById("topPicks");
+
+  grid.replaceChildren();
+  topPicks.replaceChildren();
+
+  const query = q.trim();
+  const filtered = people.filter(person =>
+    person.name.includes(query)
+  );
+
+  if (!query) {
+    topPicks.hidden = false;
+
+    filtered
+      .filter(person => person.rank === 1 || person.rank === 2)
+      .sort((a, b) => a.rank - b.rank)
+      .forEach(person => {
+        topPicks.appendChild(makeFeaturedCard(person));
+      });
+
+    filtered
+      .filter(person => person.rank >= 3)
+      .sort((a, b) => a.rank - b.rank)
+      .forEach(person => {
+        grid.appendChild(makeRegularCard(person));
+      });
+  } else {
+    topPicks.hidden = true;
+
+    filtered
+      .sort((a, b) => a.rank - b.rank)
+      .forEach(person => {
+        grid.appendChild(makeRegularCard(person));
+      });
+  }
+}
+
+document.getElementById("search").addEventListener("input", event => {
+  draw(event.target.value);
+});
+
+draw();
+</script></body></html>
