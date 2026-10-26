@@ -372,7 +372,49 @@ function makeFeaturedCard(person) {
   addProfileRow(panel, "出身地", details.birthplace);
   addProfileRow(panel, "活動歴", details.history);
   addProfileRow(panel, "代表作", details.works);
-  addProfileRow(panel, "公式SNS", details.sns);
+  
+const snsRow = document.createElement("div");
+snsRow.className = "profile-row";
+
+const snsTitle = document.createElement("span");
+snsTitle.className = "profile-label";
+snsTitle.textContent = "公式SNS";
+
+snsRow.appendChild(snsTitle);
+
+const snsList = document.createElement("div");
+snsList.className = "profile-value";
+
+const snsText = details.sns || "";
+const snsUrls = snsText.match(/https?:\/\/[^\s｜|]+/g) || [];
+
+if (snsUrls.length > 0) {
+  snsUrls.forEach((url, index) => {
+    if (index > 0) {
+      snsList.appendChild(document.createTextNode(" ｜ "));
+    }
+
+    const link = document.createElement("a");
+    link.href = url.replace(/[.,。]+$/, "");
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+
+    const host = new URL(link.href).hostname;
+    link.textContent =
+      host.includes("instagram.com") ? "Instagram" :
+      host.includes("x.com") || host.includes("twitter.com") ? "X" :
+      host.includes("youtube.com") || host.includes("youtu.be") ? "YouTube" :
+      "公式サイト";
+
+    snsList.appendChild(link);
+  });
+} else {
+  snsList.textContent = snsText || "未登録";
+}
+
+snsRow.appendChild(snsList);
+panel.appendChild(snsRow);
+
 
   const officialTitle = document.createElement("h3");
   officialTitle.textContent = "公式サイト・掲載元";
