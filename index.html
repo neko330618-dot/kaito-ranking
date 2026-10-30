@@ -464,6 +464,28 @@ a {
   text-decoration: underline;
 }
 
+/* My BEST30 Ⅱへのリンク */
+.second-ranking-link {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 999;
+  display: inline-block;
+  padding: 10px 15px;
+  border: 1px solid #ff8fbd;
+  border-radius: 30px;
+  background: #281b24;
+  color: #ff9bc5;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 3px 12px rgba(0,0,0,.3);
+}
+
+.second-ranking-link:hover {
+  background: #482034;
+  color: #ffffff;
+}
 </style>
 </head><body><header><h1>My BEST30</h1><p>TOP30 · 写真をタップで拡大 / 名前をタップで公式サイトへ</p></header>
 <main><input class="search" id="search" placeholder="名前で検索" aria-label="名前で検索"><section class="top-picks" id="topPicks"></section>
@@ -777,4 +799,11 @@ document.getElementById("search").addEventListener("input", event => {
 });
 
 draw();
-</script></body></html>
+</script><a
+  class="second-ranking-link"
+  href="https://neko330618-dot.github.io/my-best30-second/"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  My BEST30 Ⅱ ♡
+</a></body></html>
