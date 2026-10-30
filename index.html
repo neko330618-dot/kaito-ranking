@@ -399,8 +399,73 @@ a {
     transform: none;
   }
 }
+  
+/* ===== 写真拡大ライトボックス ===== */
+
+.photo {
+  cursor: zoom-in;
+}
+
+.featured-photo {
+  cursor: zoom-in;
+}
+
+.photo-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.92);
+}
+
+.photo-viewer.active {
+  display: flex;
+}
+
+.photo-viewer img {
+  max-width: 95vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 35px #c9b6ff45;
+}
+
+.photo-viewer-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #c9b6ff;
+  border-radius: 50%;
+  background: #302341;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.photo-viewer-close:hover {
+  background: #594774;
+}
+
+/* 名前だけをリンクにする */
+.name-link,
+.featured-name-link {
+  color: #f7f3ff;
+  text-decoration: none;
+}
+
+.name-link:hover,
+.featured-name-link:hover {
+  color: #c9b6ff;
+  text-decoration: underline;
+}
+
 </style>
-</head><body><header><h1>My BEST30</h1><p>TOP30 · 写真をタップすると掲載元へ</p></header>
+</head><body><header><h1>My BEST30</h1><p>TOP30 · 写真をタップで拡大 / 名前をタップで公式サイトへ</p></header>
 <main><input class="search" id="search" placeholder="名前で検索" aria-label="名前で検索"><section class="top-picks" id="topPicks"></section>
 <div class="grid" id="grid"></div>
 <div class="note"><b>写真を設定するには</b><br>現在、人物ごとの掲載元リンクを登録したスターター版です。画像URLは未設定です。本人と確認できる公式写真や利用許諾された画像の直接URLを、下のコード内の各人物の <code>photo</code> に入力すると写真が表示されます。公開写真でも著作権は掲載元などにあるため、無断転載せず、掲載元の利用条件を守ってください。</div></main>
@@ -447,6 +512,56 @@ function addProfileRow(parent, label, value) {
   parent.appendChild(row);
 }
 
+
+/* ===== 写真拡大機能 ===== */
+
+const viewer = document.createElement("div");
+viewer.className = "photo-viewer";
+viewer.setAttribute("role", "dialog");
+viewer.setAttribute("aria-modal", "true");
+viewer.setAttribute("aria-label", "写真の拡大表示");
+
+const viewerImage = document.createElement("img");
+viewerImage.alt = "";
+
+const closeButton = document.createElement("button");
+closeButton.className = "photo-viewer-close";
+closeButton.type = "button";
+closeButton.textContent = "×";
+closeButton.setAttribute("aria-label", "閉じる");
+
+viewer.append(viewerImage, closeButton);
+document.body.appendChild(viewer);
+
+function closePhoto() {
+  viewer.classList.remove("active");
+  viewerImage.src = "";
+}
+
+function openPhoto(person) {
+  if (!person.photo) return;
+
+  viewerImage.src = person.photo;
+  viewerImage.alt = person.name;
+  viewer.classList.add("active");
+  closeButton.focus();
+}
+
+closeButton.addEventListener("click", closePhoto);
+
+viewer.addEventListener("click", event => {
+  if (event.target === viewer) {
+    closePhoto();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && viewer.classList.contains("active")) {
+    closePhoto();
+  }
+});
+
+
 function makePhoto(person, className) {
   const photo = document.createElement("div");
   photo.className = className;
@@ -456,13 +571,30 @@ function makePhoto(person, className) {
     image.src = person.photo;
     image.alt = person.name;
     image.loading = "lazy";
+
     photo.appendChild(image);
+
+    photo.setAttribute("role", "button");
+    photo.setAttribute("tabindex", "0");
+    photo.setAttribute("aria-label", person.name + "の写真を拡大");
+
+    photo.addEventListener("click", () => {
+      openPhoto(person);
+    });
+
+    photo.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openPhoto(person);
+      }
+    });
   } else {
     photo.textContent = "写真URLを設定するとここに表示";
   }
 
   return photo;
 }
+
 
 function makeFeaturedCard(person) {
   const card = document.createElement("article");
@@ -477,9 +609,12 @@ function makeFeaturedCard(person) {
   rank.className = "featured-rank";
   rank.textContent = person.rank === 1 ? "👑 RANK 1" : "RANK 2";
 
-  const name = document.createElement("div");
-  name.className = "featured-name";
-  name.textContent = person.name;
+ const name = document.createElement("a");
+name.className = "featured-name featured-name-link";
+name.textContent = person.name;
+name.href = person.link;
+name.target = "_blank";
+name.rel = "noopener noreferrer";;
 
   const button = document.createElement("button");
   button.className = "profile-button";
@@ -570,15 +705,13 @@ panel.appendChild(snsRow);
 }
 
 function makeRegularCard(person) {
+  
+function makeRegularCard(person) {
   const card = document.createElement("div");
   card.className = "card";
 
-  const link = document.createElement("a");
-  link.href = person.link;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-
-  link.appendChild(makePhoto(person, "photo"));
+  // 写真は拡大表示専用
+  card.appendChild(makePhoto(person, "photo"));
 
   const meta = document.createElement("div");
   meta.className = "meta";
@@ -587,16 +720,20 @@ function makeRegularCard(person) {
   rank.className = "rank";
   rank.textContent = "NO. " + person.rank;
 
-  const name = document.createElement("div");
-  name.className = "name";
+  // 名前だけをプロフィールリンクにする
+  const name = document.createElement("a");
+  name.className = "name name-link";
   name.textContent = person.name;
+  name.href = person.link;
+  name.target = "_blank";
+  name.rel = "noopener noreferrer";
 
   meta.append(rank, name);
-  link.appendChild(meta);
-  card.appendChild(link);
+  card.appendChild(meta);
 
   return card;
 }
+
 
 function draw(q = "") {
   const grid = document.getElementById("grid");
