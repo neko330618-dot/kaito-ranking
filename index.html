@@ -498,6 +498,12 @@ a {
 .fanclub-link:hover {
   color: #ffffff;
 }
+.birth-info {
+  margin-top: 5px;
+  color: #c2b4d8;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
 </style>
 </head><body><header><h1>My BEST30</h1><p>TOP30 · 写真をタップで拡大 / 名前をタップで公式サイトへ</p></header>
 <main><input class="search" id="search" placeholder="名前で検索" aria-label="名前で検索"><section class="top-picks" id="topPicks"></section>
@@ -865,7 +871,7 @@ function makeRegularCard(person) {
   name.target = "_blank";
   name.rel = "noopener noreferrer";
 
-  meta.append(rank, name);
+  meta.append(rank, name, makeBirthInfo(person));
 const fanclubLink = makeFanclubLink(person);
 if (fanclubLink) meta.appendChild(fanclubLink);
   card.appendChild(meta);
