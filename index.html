@@ -504,6 +504,11 @@ a {
   font-size: 0.76rem;
   line-height: 1.5;
 }
+.birth-date {
+  font-size: 0.65rem;
+  color: #c2b4d8;
+  margin-left: 4px;
+}
 </style>
 </head><body><header><h1>My BEST30</h1><p>TOP30 · 写真をタップで拡大 / 名前をタップで公式サイトへ</p></header>
 <main><input class="search" id="search" placeholder="名前で検索" aria-label="名前で検索"><section class="top-picks" id="topPicks"></section>
@@ -595,9 +600,14 @@ function makeBirthInfo(person) {
 
   const [year, month, day] = person.birthdate.split("-").map(Number);
 
-  info.textContent =
-    `${year}年${month}月${day}日生まれ・${calculateAge(person.birthdate)}歳`;
+  const age = document.createElement("span");
+  age.textContent = `${calculateAge(person.birthdate)}歳`;
 
+  const birthdate = document.createElement("span");
+  birthdate.className = "birth-date";
+  birthdate.textContent = `（${year}年${month}月${day}日生まれ）`;
+
+  info.append(age, birthdate);
   return info;
 }
   
